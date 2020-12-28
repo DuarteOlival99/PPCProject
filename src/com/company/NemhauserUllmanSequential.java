@@ -1,29 +1,89 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NemhauserUllmanSequential {
 	
 	public static int NDIM = 3;
-	
+
 	public static void main(String[] args) {
 
+        //NemhauserUllmanSequential.start();
+
 		long start = System.nanoTime();
+
 		String fname = args[0];
 			int[][] objects = NemhauserUllmanSequential.importDataObjects(fname, NDIM);
 			List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
 			NemhauserUllmanSequential.printPareto(paretoFront);
 
 		long end = System.nanoTime();
-
 		System.out.println((end - start)/1000000 + " milisegundos");
 		System.out.println((end - start)/1000000000 + " segundos");
 	}
+
+	public static void start(){
+        //List<String> allFIles = getAllFiles();
+
+        writeToFile();
+
+//        for (String s : allFIles){
+//            String file = "data/" + s;
+//            long start = System.nanoTime();
+//            int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
+//            List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+//            NemhauserUllmanSequential.printPareto(paretoFront);
+//            long end = System.nanoTime();
+//            long time = (end - start)/1000000;
+//            System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+//
+//            writeToFile(file + " -> "+ time + " milisegundos");
+//        }
+
+    }
+
+    public static List<String> getAllFiles(){
+        List<String> results = new ArrayList<String>();
+
+        File[] files = new File("data/").listFiles();
+        //If this pathname does not denote a directory, then listFiles() returns null.
+
+        for (File file : files) {
+            if (file.isFile()) {
+                results.add(file.getName());
+            }
+        }
+        return results;
+    }
+
+    public static void writeToFile(){
+        try {
+			List<String> allFIles = getAllFiles();
+
+			FileWriter myWriter = new FileWriter("output.txt");
+			for (String s : allFIles){
+				String file = "data/" + s;
+				long start = System.nanoTime();
+				int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
+				List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+				NemhauserUllmanSequential.printPareto(paretoFront);
+
+				long end = System.nanoTime();
+				long time = (end - start)/1000000;
+
+				System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+
+				myWriter.write(file + " -> "+ time + " milisegundos\n");
+			}
+            myWriter.close();
+            //System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 	
 	public static int[][] importDataObjects(String fileName, int dim) {
         String line = null;
@@ -80,8 +140,20 @@ public class NemhauserUllmanSequential {
 				newWorkingSolutions.add(s2);
 			}
 			workingSolutions.addAll(newWorkingSolutions);
+
+			List<Solution> teste = filterNonDominated(workingSolutions);
+
+			boolean result = true;
+			for ( Solution s : teste){
+				if (s == null){
+					result = false;
+				}
+			}
+			if ( !result ) {
+				System.out.println("encontrou null");
+			}
 			
-			workingSolutions = filterNonDominated(workingSolutions);
+			workingSolutions = teste;
 			//System.out.println("ongoing:" + workingSolutions.size());
 		}
 		return workingSolutions;
@@ -90,19 +162,78 @@ public class NemhauserUllmanSequential {
 	
 	
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
+		int NUMBER_OF_THREADS= Runtime.getRuntime().availableProcessors();
 		List<Solution> filtered = new ArrayList<>();
-		for (Solution sol : workingSolutions) {
-			boolean nonDominated = true;
-			for (Solution sol2 : workingSolutions) {
-				if (sol.isDominatedBy(sol2)) {
-					nonDominated = false;
-					break;
+
+		if (workingSolutions.size() <= 12){
+			long startTime = System.nanoTime();
+			for (Solution sol : workingSolutions) {
+				boolean nonDominated = true;
+				for (Solution sol2 : workingSolutions) {
+					if (sol.isDominatedBy(sol2)) {
+						nonDominated = false;
+						break;
+					}
+				}
+				if (nonDominated) {
+					filtered.add(sol);
 				}
 			}
-			if (nonDominated) {
-				filtered.add(sol);
+			long endTime = System.nanoTime();
+			long time = (endTime - startTime)/1000000;
+
+			System.out.println(workingSolutions.size() + " -> Sequencial -> "+ time + " milisegundos");
+		}else {
+			long startTime = System.nanoTime();
+			Thread[] threads = new Thread[NUMBER_OF_THREADS];
+			for ( int tid = 0; tid < NUMBER_OF_THREADS; tid++){
+				int finalTid = tid;
+				threads[tid] = new Thread( () -> {
+					//System.out.println ("Thread " + Thread.currentThread().getId() + " is running");
+
+					int start_i = (finalTid * (workingSolutions.size() - 1) / NUMBER_OF_THREADS);
+					int end_i = (finalTid + 1) * (workingSolutions.size() - 1) / NUMBER_OF_THREADS;
+					if (finalTid == NUMBER_OF_THREADS - 1){
+						end_i = (workingSolutions.size());
+					}
+
+					for (int i = start_i; i < end_i ; i++){
+						//System.out.println(" ID " + i + " -> " + workingSolutions.get(i).toString());
+						boolean nonDominated = true;
+							for (Solution sol2 : workingSolutions) {
+								if (workingSolutions.get(i).isDominatedBy(sol2)) {
+									nonDominated = false;
+									break;
+								}
+							}
+						synchronized (filtered){
+							if (nonDominated) {
+								Solution sol = workingSolutions.get(i);
+								filtered.add(sol);
+							}
+						}
+
+					}
+
+				});
+				threads[tid].start();
 			}
+
+			for (Thread t : threads){
+				try{
+					t.join(); // espera ate que a t1 acabe
+				}catch (InterruptedException e){
+					e.printStackTrace();
+					System.out.println("Erro encontrado" + Thread.currentThread());
+				}
+
+			}
+			long endTime = System.nanoTime();
+			long time = (endTime - startTime)/1000000;
+
+			System.out.println(workingSolutions.size() + " -> Paralised -> "+ time + " milisegundos");
 		}
+
 		return filtered;
 	}
 }

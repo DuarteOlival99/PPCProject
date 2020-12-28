@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.Arrays;
+
 public class 	Solution implements Cloneable {
 	private boolean[] objects;
 	private int[] values = new int[NemhauserUllmanSequential.NDIM];
@@ -37,5 +39,13 @@ public class 	Solution implements Cloneable {
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Solution{" +
+				"objects=" + Arrays.toString(objects) +
+				", values=" + Arrays.toString(values) +
+				'}';
 	}
 }
