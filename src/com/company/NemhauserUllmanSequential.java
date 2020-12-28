@@ -185,49 +185,25 @@ public class NemhauserUllmanSequential {
 			System.out.println(workingSolutions.size() + " -> Sequencial -> "+ time + " milisegundos");
 		}else {
 			long startTime = System.nanoTime();
-			Thread[] threads = new Thread[NUMBER_OF_THREADS];
-			for ( int tid = 0; tid < NUMBER_OF_THREADS; tid++){
-				int finalTid = tid;
-				threads[tid] = new Thread( () -> {
-					//System.out.println ("Thread " + Thread.currentThread().getId() + " is running");
 
-					int start_i = (finalTid * (workingSolutions.size() - 1) / NUMBER_OF_THREADS);
-					int end_i = (finalTid + 1) * (workingSolutions.size() - 1) / NUMBER_OF_THREADS;
-					if (finalTid == NUMBER_OF_THREADS - 1){
-						end_i = (workingSolutions.size());
-					}
-
-					for (int i = start_i; i < end_i ; i++){
-						//System.out.println(" ID " + i + " -> " + workingSolutions.get(i).toString());
-						boolean nonDominated = true;
-							for (Solution sol2 : workingSolutions) {
-								if (workingSolutions.get(i).isDominatedBy(sol2)) {
-									nonDominated = false;
-									break;
-								}
-							}
-						synchronized (filtered){
-							if (nonDominated) {
-								Solution sol = workingSolutions.get(i);
-								filtered.add(sol);
-							}
+			DoInParallelSuperDuperFramework.doInParallel( (int start, int end) -> {
+				for (int i=start;i<end;i++) {
+					boolean nonDominated = true;
+					for (Solution sol2 : workingSolutions) {
+						if (workingSolutions.get(i).isDominatedBy(sol2)) {
+							nonDominated = false;
+							break;
 						}
-
 					}
-
-				});
-				threads[tid].start();
-			}
-
-			for (Thread t : threads){
-				try{
-					t.join(); // espera ate que a t1 acabe
-				}catch (InterruptedException e){
-					e.printStackTrace();
-					System.out.println("Erro encontrado" + Thread.currentThread());
+					synchronized (filtered){
+						if (nonDominated) {
+							Solution sol = workingSolutions.get(i);
+							filtered.add(sol);
+						}
+					}
 				}
+			} , workingSolutions.size());
 
-			}
 			long endTime = System.nanoTime();
 			long time = (endTime - startTime)/1000000;
 
