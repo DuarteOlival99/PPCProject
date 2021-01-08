@@ -1,4 +1,4 @@
-package com.company;
+package ParalisedFramework;
 
 @FunctionalInterface
 public interface ParallelizableWork {

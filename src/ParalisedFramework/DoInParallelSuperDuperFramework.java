@@ -1,4 +1,4 @@
-package com.company;
+package ParalisedFramework;
 
 public class DoInParallelSuperDuperFramework {
 	public static void doInParallel(ParallelizableWork pw, int nIterations) {
