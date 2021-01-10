@@ -12,40 +12,24 @@ public class NemhauserUllman {
 
     public static void main(String[] args) {
 
-        //NemhauserUllman.start();
+        NemhauserUllman.start();
 
         //NemhauserUllman.ReadFile();
 
-        long start = System.nanoTime();
-
-        String fname = args[0];
-        int[][] objects = NemhauserUllman.importDataObjects(fname, NDIM);
-        List<Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
-        NemhauserUllman.printPareto(paretoFront);
-
-        long end = System.nanoTime();
-        System.out.println((end - start)/1000000 + " milisegundos");
-        System.out.println((end - start)/1000000000 + " segundos");
+//        long start = System.nanoTime();
+//
+//        String fname = args[0];
+//        int[][] objects = NemhauserUllman.importDataObjects(fname, NDIM);
+//        List<Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
+//        NemhauserUllman.printPareto(paretoFront);
+//
+//        long end = System.nanoTime();
+//        System.out.println((end - start)/1000000 + " milisegundos");
+//        System.out.println((end - start)/1000000000 + " segundos");
     }
 
     public static void start(){
-        //List<String> allFIles = getAllFiles();
-
         writeToFile();
-
-//        for (String s : allFIles){
-//            String file = "data/" + s;
-//            long start = System.nanoTime();
-//            int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
-//            List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
-//            NemhauserUllmanSequential.printPareto(paretoFront);
-//            long end = System.nanoTime();
-//            long time = (end - start)/1000000;
-//            System.out.println("time of file -> " + s + " is " + time + " milisegundos");
-//
-//            writeToFile(file + " -> "+ time + " milisegundos");
-//        }
-
     }
 
     public static List<String> getAllFiles(){
@@ -63,7 +47,7 @@ public class NemhauserUllman {
     }
 
     public static void ReadFile() {
-        File myObj = new File("C:\\Users\\duart\\OneDrive\\Ambiente de Trabalho\\PPCProject\\src\\com\\company\\teste.txt");
+        File myObj = new File("C:\\Users\\duart\\OneDrive\\Ambiente de Trabalho\\PPCProject\\src\\com\\company\\tempo.txt");
         List<Integer> list = new ArrayList<Integer>();
         Scanner myReader;
         try {
@@ -89,7 +73,7 @@ public class NemhauserUllman {
         try {
             List<String> allFIles = getAllFiles();
 
-            FileWriter myWriter = new FileWriter("output.txt");
+            FileWriter myWriter = new FileWriter("tempo.txt");
             for (String s : allFIles){
                 String file = "data/" + s;
                 long start = System.nanoTime();
@@ -192,7 +176,7 @@ public class NemhauserUllman {
         List<Solution> filtered = new ArrayList<>();
 
         if (workingSolutions.size() <= 12){
-            long startTime = System.nanoTime();
+          //  long startTime = System.nanoTime();
             for (Solution sol : workingSolutions) {
                 boolean nonDominated = true;
                 for (Solution sol2 : workingSolutions) {
@@ -205,12 +189,12 @@ public class NemhauserUllman {
                     filtered.add(sol);
                 }
             }
-            long endTime = System.nanoTime();
-            long time = (endTime - startTime)/1000000;
+          //  long endTime = System.nanoTime();
+           // long time = (endTime - startTime)/1000000;
 
-            System.out.println(workingSolutions.size() + " -> Sequencial -> "+ time + " milisegundos");
+            //System.out.println(workingSolutions.size() + " -> Sequencial -> "+ time + " milisegundos");
         }else {
-            long startTime = System.nanoTime();
+            //long startTime = System.nanoTime();
 
             DoInParallelSuperDuperFramework.doInParallel( (int start, int end) -> {
                 for (int i=start;i<end;i++) {
@@ -230,10 +214,10 @@ public class NemhauserUllman {
                 }
             } , workingSolutions.size());
 
-            long endTime = System.nanoTime();
-            long time = (endTime - startTime)/1000000;
-
-            System.out.println(workingSolutions.size() + " -> Paralised -> "+ time + " milisegundos");
+//            long endTime = System.nanoTime();
+//            long time = (endTime - startTime)/1000000;
+//
+//            System.out.println(workingSolutions.size() + " -> Paralised -> "+ time + " milisegundos");
         }
 
         return filtered;

@@ -1,4 +1,3 @@
-Ficheiro com tempo nao paralizado
 data/mup_3_10_-0.4_0.dat -> 6 milisegundos
 data/mup_3_10_-0.4_1.dat -> 2 milisegundos
 data/mup_3_10_-0.4_10.dat -> 1 milisegundos
