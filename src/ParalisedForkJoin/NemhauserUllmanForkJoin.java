@@ -1,11 +1,12 @@
 package ParalisedForkJoin;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import ParalisedFramework.NemhauserUllman;
+
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 
 public class NemhauserUllmanForkJoin {
@@ -14,17 +15,87 @@ public class NemhauserUllmanForkJoin {
 	
 	public static void main(String[] args) {
 
-		long start = System.nanoTime();
+		NemhauserUllmanForkJoin.start();
 
-		String fname = args[0];
-			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
-			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
-			NemhauserUllmanForkJoin.printPareto(paretoFront);
+//		long start = System.nanoTime();
+//
+//		String fname = args[0];
+//			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
+//			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+//			NemhauserUllmanForkJoin.printPareto(paretoFront);
+//
+//		long end = System.nanoTime();
+//		System.out.println((end - start)/1000000 + " milisegundos");
+//		System.out.println((end - start)/1000000000 + " segundos");
 
-		long end = System.nanoTime();
-		System.out.println((end - start)/1000000 + " milisegundos");
-		System.out.println((end - start)/1000000000 + " segundos");
+	}
 
+	public static void start(){
+		writeToFile();
+	}
+
+	public static List<String> getAllFiles(){
+		List<String> results = new ArrayList<String>();
+
+		File[] files = new File("data/").listFiles();
+		//If this pathname does not denote a directory, then listFiles() returns null.
+
+		for (File file : files) {
+			if (file.isFile()) {
+				results.add(file.getName());
+			}
+		}
+		return results;
+	}
+
+	public static void ReadFile() {
+		File myObj = new File("C:\\Users\\duart\\OneDrive\\Ambiente de Trabalho\\PPCProject\\src\\com\\company\\tempo.txt");
+		List<Integer> list = new ArrayList<Integer>();
+		Scanner myReader;
+		try {
+			myReader = new Scanner(myObj);
+			while (myReader.hasNextLine()) {
+				String data = myReader.nextLine();
+				String[] parts = data.split(" ");
+				list.add(Integer.valueOf(parts[2]));
+				System.out.println(data);
+			}
+			myReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		Collections.sort(list);
+		System.out.println(list);
+
+	}
+
+
+	public static void writeToFile(){
+		try {
+			List<String> allFIles = getAllFiles();
+
+			FileWriter myWriter = new FileWriter("tempo.txt");
+			for (String s : allFIles){
+				String file = "data/" + s;
+				long start = System.nanoTime();
+				int[][] objects = NemhauserUllman.importDataObjects(file, NDIM);
+				List<ParalisedFramework.Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
+				NemhauserUllman.printPareto(paretoFront);
+
+				long end = System.nanoTime();
+				long time = (end - start)/1000000;
+
+				System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+
+				myWriter.write(file + " -> "+ time + " milisegundos\n");
+			}
+			myWriter.close();
+			//System.out.println("Successfully wrote to the file.");
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 	}
 	
 	public static int[][] importDataObjects(String fileName, int dim) {

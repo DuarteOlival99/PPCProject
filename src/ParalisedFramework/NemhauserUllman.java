@@ -190,9 +190,8 @@ public class NemhauserUllman {
 
     private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
         List<Solution> filtered = new ArrayList<>();
-        int NUMBER_OF_THREADS= Runtime.getRuntime().availableProcessors();
 
-        if (workingSolutions.size() <= NUMBER_OF_THREADS){
+        if (workingSolutions.size() <= 12){
             long startTime = System.nanoTime();
             for (Solution sol : workingSolutions) {
                 boolean nonDominated = true;
