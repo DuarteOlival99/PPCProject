@@ -92,11 +92,16 @@ public class NemhauserUllmanForkJoin {
 	
 	
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
+		long start = System.nanoTime();
+
 		List<Solution> filtered = new ArrayList<>();
 
 		ForkJoinNemhauserUllman NU = new ForkJoinNemhauserUllman(workingSolutions, workingSolutions);
 		NU.fork();
 		filtered = NU.join();
+
+		long end = System.nanoTime();
+		System.out.println("P= "+ filtered.size() +" Tempo: " + (end - start)/1000000 + " milisegundos");
 
 		return filtered;
 	}
