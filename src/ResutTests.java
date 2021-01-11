@@ -1,10 +1,9 @@
-import ParalisedFramework.NemhauserUllman;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ResutTests {
 
@@ -24,12 +23,79 @@ public class ResutTests {
             FileWriter myWriter = new FileWriter("tempo.txt");
 
             List<String> listFinal = new ArrayList<>();
+            AtomicReference<Integer> maiorNumero = new AtomicReference<>(0);
+
+            List<Integer> valueSequencial = new ArrayList<>();
+            List<Integer> valueParalisedFramework =  new ArrayList<>();
+            List<Integer> valueParalisedForkJoin =  new ArrayList<>();
+            Integer count = 0;
+//
+//            listParalisedForkJoin.forEach((k, v) -> {
+//                String[] parts1 = k.split("_");
+//                if (3 == Integer.parseInt(parts1[1])) { //so para a dimensao 3
+//                    if (v > maiorNumero.get()){
+//                        maiorNumero.set(v); // maior numero é = 85890
+//                    }
+//                    listFinal.add("Paralised ForkJoin;" + v + "\n");
+//                }
+//            });
+
+//            listParalisedFramework.forEach((k, v) -> {
+//                String[] parts1 = k.split("_");
+//                if (3 == Integer.parseInt(parts1[1])) { //so para a dimensao 3
+//                    if (v > maiorNumero.get()){
+//                        maiorNumero.set(v); // maior numero é = 110375
+//                    }
+//                    listFinal.add("Paralised Framework;" + v + "\n");
+//                }
+//            });
 
             listSequencial.forEach((k, v) -> {
-                listFinal.add(k + " / " + v + " / " + listParalisedFramework.get(k) + " / " + listParalisedForkJoin.get(k) + "\n");
+
+                String[] parts1 = k.split("_");
+                if (3 == Integer.parseInt(parts1[1])) { //so para a dimensao 3
+//                    if (v > maiorNumero.get()){
+//                        maiorNumero.set(v); // maior numero é = 527404
+//                    }
+                    //listFinal.add("Sequential;" + v + "\n");
+                    //listFinal.add("Paralised Framework;" + listParalisedFramework.get(k) + "\n");
+                    //listFinal.add("Paralised ForkJoin;" + listParalisedForkJoin.get(k) + "\n");
+
+                    valueSequencial.add(v);
+                    valueParalisedFramework.add(listParalisedFramework.get(k));
+                    valueParalisedForkJoin.add(listParalisedForkJoin.get(k));
+
+                }
+
+                //listFinal.add(k + " / " + v + " / " + listParalisedFramework.get(k) + " / " + listParalisedForkJoin.get(k) + "\n");
+
+//                if (v < listParalisedFramework.get(k) && v < listParalisedForkJoin.get(k)){
+//                    listFinal.add(k + " / " + v + " / " + listParalisedFramework.get(k) + " / " + listParalisedForkJoin.get(k) + "\n");
+//                }
             });
 
-            Collections.sort(listFinal);
+            Integer finalValueSequencial = 0;
+            for (Integer value : valueSequencial){
+                finalValueSequencial += value;
+            }
+            listFinal.add("media de tempo de execucao para a versao Sequencial = " + (finalValueSequencial/valueSequencial.size())+ " Milesegundos" + "\n");
+
+            Integer finalValueParalisedFramework = 0;
+            for (Integer value : valueParalisedFramework){
+                finalValueParalisedFramework += value;
+            }
+            listFinal.add("media de tempo de execucao para a versao paralisada framework = " + (finalValueParalisedFramework/valueParalisedFramework.size())+ " Milesegundos" + "\n");
+
+            Integer finalValueParalisedForkJoin = 0;
+            for (Integer value : valueParalisedForkJoin){
+                finalValueParalisedForkJoin += value;
+            }
+            listFinal.add("media de tempo de execucao para a versao paralisada Fork Join = " + (finalValueParalisedForkJoin/valueParalisedForkJoin.size())+ " Milesegundos" + "\n");
+
+
+            //System.out.println("maior numero é = " + maiorNumero);
+
+            //Collections.sort(listFinal);
 
             for (String item : listFinal){
                 myWriter.write(item);

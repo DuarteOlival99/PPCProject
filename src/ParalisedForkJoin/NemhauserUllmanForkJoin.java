@@ -1,7 +1,5 @@
 package ParalisedForkJoin;
 
-import ParalisedFramework.NemhauserUllman;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,18 +13,18 @@ public class NemhauserUllmanForkJoin {
 	
 	public static void main(String[] args) {
 
-		NemhauserUllmanForkJoin.start();
+		//NemhauserUllmanForkJoin.start();
 
-//		long start = System.nanoTime();
-//
-//		String fname = args[0];
-//			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
-//			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
-//			NemhauserUllmanForkJoin.printPareto(paretoFront);
-//
-//		long end = System.nanoTime();
-//		System.out.println((end - start)/1000000 + " milisegundos");
-//		System.out.println((end - start)/1000000000 + " segundos");
+		long start = System.nanoTime();
+
+		String fname = args[0];
+			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
+			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+			NemhauserUllmanForkJoin.printPareto(paretoFront);
+
+		long end = System.nanoTime();
+		System.out.println((end - start)/1000000 + " milisegundos");
+		System.out.println((end - start)/1000000000 + " segundos");
 
 	}
 
@@ -79,9 +77,9 @@ public class NemhauserUllmanForkJoin {
 			for (String s : allFIles){
 				String file = "data/" + s;
 				long start = System.nanoTime();
-				int[][] objects = NemhauserUllman.importDataObjects(file, NDIM);
-				List<ParalisedFramework.Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
-				NemhauserUllman.printPareto(paretoFront);
+				int[][] objects = NemhauserUllmanForkJoin.importDataObjects(file, NDIM);
+				List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+				NemhauserUllmanForkJoin.printPareto(paretoFront);
 
 				long end = System.nanoTime();
 				long time = (end - start)/1000000;
@@ -143,6 +141,8 @@ public class NemhauserUllmanForkJoin {
 	}
 	
 	public static List<Solution> computeParetoNH(int[][] objects) {
+		long start = System.nanoTime();
+
 		List<Solution> workingSolutions = new ArrayList<Solution>();
 		workingSolutions.add(new Solution(new boolean[objects.length]));
 		for (int oid=0; oid <objects.length; oid++) {
@@ -157,22 +157,48 @@ public class NemhauserUllmanForkJoin {
 			workingSolutions = filterNonDominated(workingSolutions);
 			//System.out.println("ongoing:" + workingSolutions.size());
 		}
+
+		long end = System.nanoTime();
+		//System.out.println("computeParetoNH demorou " + (end - start)/1000000 + " milisegundos");
+
 		return workingSolutions;
 	}
 	
 	
 	
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
-		long start = System.nanoTime();
-
 		List<Solution> filtered = new ArrayList<>();
 
-		ForkJoinNemhauserUllman NU = new ForkJoinNemhauserUllman(workingSolutions, workingSolutions);
-		NU.fork();
-		filtered = NU.join();
+//		if (workingSolutions.size() <= 900){
+//			long startTime = System.nanoTime();
+//			for (Solution sol : workingSolutions) {
+//				boolean nonDominated = true;
+//				for (Solution sol2 : workingSolutions) {
+//					if (sol.isDominatedBy(sol2)) {
+//						nonDominated = false;
+//						break;
+//					}
+//				}
+//				if (nonDominated) {
+//					filtered.add(sol);
+//				}
+//			}
+//			long endTime = System.nanoTime();
+//			long time = (endTime - startTime)/1000000;
+//
+//			System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
+//            return filtered;
+//		}
 
-		long end = System.nanoTime();
-		System.out.println("P= "+ filtered.size() +" Tempo: " + (end - start)/1000000 + " milisegundos");
+        long start = System.nanoTime();
+
+        ForkJoinNemhauserUllman NU = new ForkJoinNemhauserUllman(workingSolutions, workingSolutions);
+        NU.fork();
+        filtered = NU.join();
+
+        long end = System.nanoTime();
+        long time = (end - start)/1000000;
+        System.out.println("P= " + filtered.size() + " ->  Tempo ForkJoin -> "+ time + " milisegundos");
 
 		return filtered;
 	}
