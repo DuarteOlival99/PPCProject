@@ -1,0 +1,9 @@
+Nome do ficheiro / Tempo sequencial / Tempo paralisado Framework / Tempo Paralisado ForkJoin -> Tempo sempre em milisegundos
+data/mup_3_50_0.0_8.dat / 28212 / 8662 / 9143
+data/mup_3_50_0.0_9.dat / 47441 / 13439 / 16378
+data/mup_4_50_0.0_28.dat / 15063 / 4358 / 4549
+data/mup_4_50_0.0_29.dat / 50941 / 12256 / 13902
+data/mup_4_50_0.0_3.dat / 22405 / 6369 / 6446
+data/mup_4_50_0.0_4.dat / 34223 / 8890 / 9223
+data/mup_4_50_0.8_18.dat / 1043167 / 248186 / 248415
+data/mup_4_50_0.8_27.dat / 258899 / 37668 / 40426

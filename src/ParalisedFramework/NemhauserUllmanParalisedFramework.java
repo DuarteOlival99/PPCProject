@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class NemhauserUllman {
+public class NemhauserUllmanParalisedFramework {
 
     public static int NDIM = 3;
 
@@ -19,9 +19,9 @@ public class NemhauserUllman {
         long start = System.nanoTime();
 
         String fname = args[0];
-        int[][] objects = NemhauserUllman.importDataObjects(fname, NDIM);
-        List<Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
-        NemhauserUllman.printPareto(paretoFront);
+        int[][] objects = NemhauserUllmanParalisedFramework.importDataObjects(fname, NDIM);
+        List<Solution> paretoFront = NemhauserUllmanParalisedFramework.computeParetoNH(objects);
+        NemhauserUllmanParalisedFramework.printPareto(paretoFront);
 
         long end = System.nanoTime();
         System.out.println((end - start)/1000000 + " milisegundos");
@@ -93,9 +93,9 @@ public class NemhauserUllman {
             for (String s : allFIles){
                 String file = "data/" + s;
                 long start = System.nanoTime();
-                int[][] objects = NemhauserUllman.importDataObjects(file, NDIM);
-                List<Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
-                NemhauserUllman.printPareto(paretoFront);
+                int[][] objects = NemhauserUllmanParalisedFramework.importDataObjects(file, NDIM);
+                List<Solution> paretoFront = NemhauserUllmanParalisedFramework.computeParetoNH(objects);
+                NemhauserUllmanParalisedFramework.printPareto(paretoFront);
 
                 long end = System.nanoTime();
                 long time = (end - start)/1000000;
@@ -209,7 +209,7 @@ public class NemhauserUllman {
             long endTime = System.nanoTime();
             long time = (endTime - startTime)/1000000;
 
-            System.out.println(workingSolutions.size() + " -> Sequencial -> "+ time + " milisegundos");
+            System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
         }else {
             long startTime = System.nanoTime();
 
@@ -234,7 +234,8 @@ public class NemhauserUllman {
             long endTime = System.nanoTime();
             long time = (endTime - startTime)/1000000;
 
-            System.out.println(workingSolutions.size() + " -> Paralised -> "+ time + " milisegundos");
+            System.out.println("P= " + filtered.size() + " ->  Tempo Paralised -> "+ time + " milisegundos");
+
         }
 
         return filtered;

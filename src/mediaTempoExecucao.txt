@@ -1,0 +1,3 @@
+media de tempo de execucao para a versao Sequencial = 12708 Milesegundos
+media de tempo de execucao para a versao paralisada framework = 2955 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join = 2235 Milesegundos

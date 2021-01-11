@@ -1,7 +1,5 @@
 package Sequencial;
 
-import ParalisedFramework.NemhauserUllman;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,12 +13,18 @@ public class NemhauserUllmanSequential {
 	
 	public static void main(String[] args) {
 
-		NemhauserUllmanSequential.start();
+		//NemhauserUllmanSequential.start();
 
-//		String fname = args[0];
-//			int[][] objects = NemhauserUllmanSequential.importDataObjects(fname, NDIM);
-//			List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
-//			NemhauserUllmanSequential.printPareto(paretoFront);
+		long start = System.nanoTime();
+
+		String fname = args[0];
+			int[][] objects = NemhauserUllmanSequential.importDataObjects(fname, NDIM);
+			List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+			NemhauserUllmanSequential.printPareto(paretoFront);
+
+		long end = System.nanoTime();
+		System.out.println((end - start)/1000000 + " milisegundos");
+		System.out.println((end - start)/1000000000 + " segundos");
 
 	}
 
@@ -89,9 +93,9 @@ public class NemhauserUllmanSequential {
 			for (String s : allFIles){
 				String file = "data/" + s;
 				long start = System.nanoTime();
-				int[][] objects = NemhauserUllman.importDataObjects(file, NDIM);
-				List<ParalisedFramework.Solution> paretoFront = NemhauserUllman.computeParetoNH(objects);
-				NemhauserUllman.printPareto(paretoFront);
+				int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
+				List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+				NemhauserUllmanSequential.printPareto(paretoFront);
 
 				long end = System.nanoTime();
 				long time = (end - start)/1000000;
@@ -153,6 +157,8 @@ public class NemhauserUllmanSequential {
 	}
 	
 	public static List<Solution> computeParetoNH(int[][] objects) {
+		long start = System.nanoTime();
+
 		List<Solution> workingSolutions = new ArrayList<Solution>();
 		workingSolutions.add(new Solution(new boolean[objects.length]));
 		for (int oid=0; oid <objects.length; oid++) {
@@ -167,12 +173,18 @@ public class NemhauserUllmanSequential {
 			workingSolutions = filterNonDominated(workingSolutions);
 			//System.out.println("ongoing:" + workingSolutions.size());
 		}
+
+		long end = System.nanoTime();
+		//System.out.println("computeParetoNH demorou " + (end - start)/1000000 + " milisegundos");
+
 		return workingSolutions;
 	}
 	
 	
 	
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
+		long start = System.nanoTime();
+
 		List<Solution> filtered = new ArrayList<>();
 		for (Solution sol : workingSolutions) {
 			boolean nonDominated = true;
@@ -186,6 +198,10 @@ public class NemhauserUllmanSequential {
 				filtered.add(sol);
 			}
 		}
+
+		long end = System.nanoTime();
+		System.out.println("P= "+ filtered.size() +" Tempo: " + (end - start)/1000000 + " milisegundos");
+
 		return filtered;
 	}
 }
