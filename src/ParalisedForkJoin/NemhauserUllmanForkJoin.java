@@ -9,22 +9,22 @@ import java.util.Scanner;
 
 public class NemhauserUllmanForkJoin {
 	
-	public static int NDIM = 5;
+	public static int NDIM = 4;
 	
 	public static void main(String[] args) {
 
-		NemhauserUllmanForkJoin.start();
+		//NemhauserUllmanForkJoin.start();
 
-//		long start = System.nanoTime();
-//
-//		String fname = args[0];
-//			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
-//			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
-//			NemhauserUllmanForkJoin.printPareto(paretoFront);
-//
-//		long end = System.nanoTime();
-//		System.out.println((end - start)/1000000 + " milisegundos");
-//		System.out.println((end - start)/1000000000 + " segundos");
+		long start = System.nanoTime();
+
+		String fname = args[0];
+			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
+			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+			NemhauserUllmanForkJoin.printPareto(paretoFront);
+
+		long end = System.nanoTime();
+		System.out.println((end - start)/1000000 + " milisegundos");
+		System.out.println((end - start)/1000000000 + " segundos");
 
 	}
 
@@ -179,36 +179,36 @@ public class NemhauserUllmanForkJoin {
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
 		List<Solution> filtered = new ArrayList<>();
 
-		if (workingSolutions.size() <= 900){
-			long startTime = System.nanoTime();
-			for (Solution sol : workingSolutions) {
-				boolean nonDominated = true;
-				for (Solution sol2 : workingSolutions) {
-					if (sol.isDominatedBy(sol2)) {
-						nonDominated = false;
-						break;
-					}
-				}
-				if (nonDominated) {
-					filtered.add(sol);
-				}
-			}
-			long endTime = System.nanoTime();
-			long time = (endTime - startTime)/1000000;
-
-			//System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
-            return filtered;
-		}
+//		if (workingSolutions.size() <= 900){
+//			long startTime = System.nanoTime();
+//			for (Solution sol : workingSolutions) {
+//				boolean nonDominated = true;
+//				for (Solution sol2 : workingSolutions) {
+//					if (sol.isDominatedBy(sol2)) {
+//						nonDominated = false;
+//						break;
+//					}
+//				}
+//				if (nonDominated) {
+//					filtered.add(sol);
+//				}
+//			}
+//			long endTime = System.nanoTime();
+//			long time = (endTime - startTime)/1000000;
+//
+//			System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
+//            return filtered;
+//		}
 
         long start = System.nanoTime();
 
-        ForkJoinNemhauserUllman NU = new ForkJoinNemhauserUllman(workingSolutions, workingSolutions);
+        ForkJoinNemhauserUllman NU = new ForkJoinNemhauserUllman(workingSolutions, workingSolutions, 0);
         NU.fork();
         filtered = NU.join();
 
         long end = System.nanoTime();
         long time = (end - start)/1000000;
-        //System.out.println("P= " + filtered.size() + " ->  Tempo ForkJoin -> "+ time + " milisegundos");
+        System.out.println("P= " + filtered.size() + " ->  Tempo ForkJoin -> "+ time + " milisegundos");
 
 		return filtered;
 	}
