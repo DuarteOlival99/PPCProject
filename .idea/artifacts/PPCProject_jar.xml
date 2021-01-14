@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="PPCProject:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PPCProject_jar</output-path>
+    <root id="archive" name="PPCProject.jar">
+      <element id="module-output" name="PPCProject" />
+    </root>
+  </artifact>
+</component>

@@ -110,7 +110,7 @@ public class ResutTests {
     }
 
     public static HashMap<String, Integer>  ReadFileSequencial() {
-        File myObj = new File("C:\\Users\\duart\\OneDrive\\Ambiente de Trabalho\\PPCProject\\src\\tempo_sequencial.txt");
+        File myObj = new File("C:\\Users\\duart\\OneDrive\\Ambiente de Trabalho\\PPCProject\\src\\tempo_sequencial_dim5.txt");
         List<Integer> list = new ArrayList<Integer>();
         HashMap<String, Integer> listSequencial = new HashMap<String,Integer>();
         Scanner myReader;

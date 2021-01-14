@@ -1,5 +1,7 @@
 package Sequencial;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,22 +11,22 @@ import java.util.Scanner;
 
 public class NemhauserUllmanSequential {
 	
-	public static int NDIM = 3;
+	public static int NDIM = 5;
 	
 	public static void main(String[] args) {
 
-		//NemhauserUllmanSequential.start();
+		NemhauserUllmanSequential.start();
 
 		long start = System.nanoTime();
 
-		String fname = args[0];
-			int[][] objects = NemhauserUllmanSequential.importDataObjects(fname, NDIM);
-			List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
-			NemhauserUllmanSequential.printPareto(paretoFront);
-
-		long end = System.nanoTime();
-		System.out.println((end - start)/1000000 + " milisegundos");
-		System.out.println((end - start)/1000000000 + " segundos");
+//		String fname = args[0];
+//			int[][] objects = NemhauserUllmanSequential.importDataObjects(fname, NDIM);
+//			List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+//			NemhauserUllmanSequential.printPareto(paretoFront);
+//
+//		long end = System.nanoTime();
+//		System.out.println((end - start)/1000000 + " milisegundos");
+//		System.out.println((end - start)/1000000000 + " segundos");
 
 	}
 
@@ -90,19 +92,29 @@ public class NemhauserUllmanSequential {
 			List<String> allFIles = getAllFiles();
 
 			FileWriter myWriter = new FileWriter("tempo_sequencial.txt");
+			boolean result = true;
 			for (String s : allFIles){
 				String file = "data/" + s;
-				long start = System.nanoTime();
-				int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
-				List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
-				NemhauserUllmanSequential.printPareto(paretoFront);
+				String[] parts = s.split("_");
+				if (Integer.parseInt(parts[1]) == 5 && result) {
+					long start = System.nanoTime();
+					int[][] objects = NemhauserUllmanSequential.importDataObjects(file, NDIM);
+					List<Solution> paretoFront = NemhauserUllmanSequential.computeParetoNH(objects);
+					NemhauserUllmanSequential.printPareto(paretoFront);
 
-				long end = System.nanoTime();
-				long time = (end - start)/1000000;
+					long end = System.nanoTime();
+					long time = (end - start)/1000000;
 
-				System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+					System.out.println("time of file -> " + s + " is " + time + " milisegundos");
 
-				myWriter.write(file + " -> "+ time + " milisegundos\n");
+					myWriter.write(file + " -> "+ time + " milisegundos\n");
+
+					if (time >= 600000){
+						result = false;
+						break;
+					}
+
+				}
 			}
 			myWriter.close();
 			//System.out.println("Successfully wrote to the file.");
@@ -200,7 +212,7 @@ public class NemhauserUllmanSequential {
 		}
 
 		long end = System.nanoTime();
-		System.out.println("P= "+ filtered.size() +" Tempo: " + (end - start)/1000000 + " milisegundos");
+		//System.out.println("P= "+ filtered.size() +" Tempo: " + (end - start)/1000000 + " milisegundos");
 
 		return filtered;
 	}

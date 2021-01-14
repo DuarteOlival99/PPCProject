@@ -9,22 +9,22 @@ import java.util.Scanner;
 
 public class NemhauserUllmanForkJoin {
 	
-	public static int NDIM = 3;
+	public static int NDIM = 5;
 	
 	public static void main(String[] args) {
 
-		//NemhauserUllmanForkJoin.start();
+		NemhauserUllmanForkJoin.start();
 
-		long start = System.nanoTime();
-
-		String fname = args[0];
-			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
-			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
-			NemhauserUllmanForkJoin.printPareto(paretoFront);
-
-		long end = System.nanoTime();
-		System.out.println((end - start)/1000000 + " milisegundos");
-		System.out.println((end - start)/1000000000 + " segundos");
+//		long start = System.nanoTime();
+//
+//		String fname = args[0];
+//			int[][] objects = NemhauserUllmanForkJoin.importDataObjects(fname, NDIM);
+//			List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+//			NemhauserUllmanForkJoin.printPareto(paretoFront);
+//
+//		long end = System.nanoTime();
+//		System.out.println((end - start)/1000000 + " milisegundos");
+//		System.out.println((end - start)/1000000000 + " segundos");
 
 	}
 
@@ -73,20 +73,30 @@ public class NemhauserUllmanForkJoin {
 		try {
 			List<String> allFIles = getAllFiles();
 
-			FileWriter myWriter = new FileWriter("tempo.txt");
+			FileWriter myWriter = new FileWriter("tempo_forkJoin_dim5.txt");
+			boolean result = true;
 			for (String s : allFIles){
 				String file = "data/" + s;
-				long start = System.nanoTime();
-				int[][] objects = NemhauserUllmanForkJoin.importDataObjects(file, NDIM);
-				List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
-				NemhauserUllmanForkJoin.printPareto(paretoFront);
+				String[] parts = s.split("_");
+				if (Integer.parseInt(parts[1]) == 5 && result) {
 
-				long end = System.nanoTime();
-				long time = (end - start)/1000000;
+					long start = System.nanoTime();
+					int[][] objects = NemhauserUllmanForkJoin.importDataObjects(file, NDIM);
+					List<Solution> paretoFront = NemhauserUllmanForkJoin.computeParetoNH(objects);
+					NemhauserUllmanForkJoin.printPareto(paretoFront);
 
-				System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+					long end = System.nanoTime();
+					long time = (end - start) / 1000000;
 
-				myWriter.write(file + " -> "+ time + " milisegundos\n");
+					System.out.println("time of file -> " + s + " is " + time + " milisegundos");
+
+					myWriter.write(file + " -> " + time + " milisegundos\n");
+
+					if (time >= 600000){
+						result = false;
+						break;
+					}
+				}
 			}
 			myWriter.close();
 			//System.out.println("Successfully wrote to the file.");
@@ -169,26 +179,26 @@ public class NemhauserUllmanForkJoin {
 	private static List<Solution> filterNonDominated(List<Solution> workingSolutions) {
 		List<Solution> filtered = new ArrayList<>();
 
-//		if (workingSolutions.size() <= 900){
-//			long startTime = System.nanoTime();
-//			for (Solution sol : workingSolutions) {
-//				boolean nonDominated = true;
-//				for (Solution sol2 : workingSolutions) {
-//					if (sol.isDominatedBy(sol2)) {
-//						nonDominated = false;
-//						break;
-//					}
-//				}
-//				if (nonDominated) {
-//					filtered.add(sol);
-//				}
-//			}
-//			long endTime = System.nanoTime();
-//			long time = (endTime - startTime)/1000000;
-//
-//			System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
-//            return filtered;
-//		}
+		if (workingSolutions.size() <= 900){
+			long startTime = System.nanoTime();
+			for (Solution sol : workingSolutions) {
+				boolean nonDominated = true;
+				for (Solution sol2 : workingSolutions) {
+					if (sol.isDominatedBy(sol2)) {
+						nonDominated = false;
+						break;
+					}
+				}
+				if (nonDominated) {
+					filtered.add(sol);
+				}
+			}
+			long endTime = System.nanoTime();
+			long time = (endTime - startTime)/1000000;
+
+			//System.out.println("P= " + filtered.size() + " ->  Tempo Sequencial -> "+ time + " milisegundos");
+            return filtered;
+		}
 
         long start = System.nanoTime();
 
@@ -198,7 +208,7 @@ public class NemhauserUllmanForkJoin {
 
         long end = System.nanoTime();
         long time = (end - start)/1000000;
-        System.out.println("P= " + filtered.size() + " ->  Tempo ForkJoin -> "+ time + " milisegundos");
+        //System.out.println("P= " + filtered.size() + " ->  Tempo ForkJoin -> "+ time + " milisegundos");
 
 		return filtered;
 	}
