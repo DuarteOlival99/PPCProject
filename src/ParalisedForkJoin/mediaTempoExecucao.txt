@@ -1,0 +1,26 @@
+dimensao = 3
+media de tempo de execucao para a versao Sequencial = 12708 Milesegundos
+media de tempo de execucao para a versao paralisada framework = 2955 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join = 2235 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Specific = 1943 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max Level = 2107 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max tasks = 1650 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Surplus = 1665 Milesegundos
+
+dimensao = 4
+media de tempo de execucao para a versao Sequencial = 8476 Milesegundos
+media de tempo de execucao para a versao paralisada framework = -- Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join =  3569 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Specific = 4238 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max Level = 2992 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max tasks = 2672 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Surplus = 2666 Milesegundos
+
+dimensao = 5
+media de tempo de execucao para a versao Sequencial = 3264 Milesegundos
+media de tempo de execucao para a versao paralisada framework = -- Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join = 4470 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Specific = 2916 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max Level = 3056 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Max tasks = 2531 Milesegundos
+media de tempo de execucao para a versao paralisada Fork Join Surplus = 2788 Milesegundos
