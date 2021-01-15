@@ -35,15 +35,16 @@ public class ForkJoinNemhauserUllman extends RecursiveTask<List<Solution>> {
             return filtered;
         }
 
-        //if (listSolutions.size() < 900) return filterNonDominatedSequencial(listSolutions, workingSolutions);
+        // Specific for NemhauserUllman
+        if (listSolutions.size() <= 900) return filterNonDominatedSequencial(listSolutions, workingSolutions);
 
-        // Max level:
-        if ( depth >= 11 ) {
+        // Max Level:
+        if ( depth >= 6 ) { //6 ou 12
             //System.out.println(listSolutions.size());
-            return filterNonDominatedSequencial(listSolutions, workingSolutions);
+           //return filterNonDominatedSequencial(listSolutions, workingSolutions);
         }
 
-        // Max tasks: if the total number of tasks >= T * #cores.
+        // Max Tasks: if the total number of tasks >= T * #cores.
         //if ( getQueuedTaskCount() > 12 * Runtime.getRuntime().availableProcessors() ) return filterNonDominatedSequencial(listSolutions, workingSolutions);
 
         // Surplus: if the current queue has more than 2 tasks than the average
